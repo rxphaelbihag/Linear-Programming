@@ -37,7 +37,7 @@ double NRM_approx(double point) {
 	return point-(mathfunc(point))/(diffmathfunc(point));
 }
 
-double falseposition() {
+int falseposition() {
 	// Variables
 	double left;
 	double right;
@@ -57,26 +57,26 @@ double falseposition() {
 	// Loop
 	system("cls");
 	printf("== False Position Method ==\n\n");
-	printf("Initial Interval: [%.4f,%.4f]\tMax Iterations: %d\n", left, right, iter);
-	printf("-----------------------------------------\n");
+	printf("Initial Interval: [%.4f,%.4f]\nMax Iterations: %d\n", left, right, iter);
+	printf("--------------------------------\n");
 	printf("Iter\tInterval\t\tApproximation\n");
 	for(int i=0; i<iter; i++) {	
 		newpoint = FPM_approx(left,right);
-		printf("%d\t[%.4f , %.4f]\t%.4f\n", i, left, right, newpoint);
-		
 		if(mathfunc(left)*mathfunc(newpoint) < 0) {
 			right = newpoint;
 		} else if(mathfunc(right)*mathfunc(newpoint) < 0) {
 			left = newpoint;
 		} else if (mathfunc(newpoint) == 0) {
-			printf("\nAnswer is here!\n");
+			printf("\nAnswer found! Skipping the remaining %d iteration/s\n", iter-(i));
+			return 0;
 		} else {
 			printf("\nError\n");
-		}	
+		}
+		printf("%d\t[%.4f , %.4f]\t%.7f\n", i, left, right, newpoint);
 	}
 }
 
-double newtonraphson() {
+int newtonraphson() {
 	// Variables
 	double point;
 	int iter=20;
@@ -91,22 +91,32 @@ double newtonraphson() {
 	
 	system("cls");
 	printf("== Newton-Raphson Method ==\n\n");
-	printf("Initial Point: %.4f\tMax Iterations: %d\n", point, iter);
-	printf("-----------------------------------------\n");
+	printf("Initial Point: %.7f\nMax Iterations: %d\n", point, iter);
+	printf("--------------------------------\n");
 	printf("Iter\tApproximation\n");
-	printf("0\t%.4f\n", point);
+	
 	for (int i=0; i<iter; i++) {
 		point = NRM_approx(point);
-		printf("%d\t%.4f\n", i+1, point);
+		printf("%d\t%.7f\n", i, point);
 	}
+	
+	
+	return 0;
 }
 
 int main() {
-	int choice = menu();
+	int choice;
+	
+	choice = menu();
 	if(choice == 1) {
 		falseposition();
 	} else if(choice == 2) {
 		newtonraphson();
+	} else if(choice == 5) {
+		printf("Program terminated.");
+		return 0;
+	} else {
+		printf("Invalid input. Please try again.");
 	}
 	
     return 0;
